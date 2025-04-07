@@ -4,7 +4,8 @@ import com.eght.token_generator.domain.JaaSJwtBuilder;
 import com.eght.token_generator.domain.TokenClaims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import sun.misc.BASE64Decoder;
+import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
@@ -39,8 +40,7 @@ public class TokenGeneratorService {
 
     private static RSAPrivateKey getPemPrivateKey(String pem) throws Exception {
         String privateKey = stripBeginEnd(pem);
-        BASE64Decoder b64 = new BASE64Decoder();
-        byte[] decoded = b64.decodeBuffer(privateKey);
+        byte[] decoded = Base64.getDecoder().decode(privateKey);
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
         KeyFactory kf = KeyFactory.getInstance(RSA);
         return (RSAPrivateKey) kf.generatePrivate(spec);
